@@ -1,8 +1,11 @@
 // Mengimpor pustaka antarmuka Material Design utama Flutter
+// ignore_for_file: unused_field
+
 import 'package:flutter/material.dart';
 // Mengimpor pustaka pemformat angka dan mata uang
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+
 // Mengimpor model data dan database helper
 import '../models/produk.dart';
 import '../helpers/database_helper.dart';
@@ -32,7 +35,13 @@ class _FormProdukPageState extends State<FormProdukPage> {
 
   // Variabel kategori terpilih (Termasuk 'Dessert' dari Live Tweak 1)
   String _kategoriTerpilih = 'Makanan';
-  final List<String> _kategoriList = ['Makanan', 'Minuman', 'Snack', 'Dessert', 'Lainnya'];
+  final List<String> _kategoriList = [
+    'Makanan',
+    'Minuman',
+    'Snack',
+    'Dessert',
+    'Lainnya',
+  ];
 
   // Status proses simpan
   bool _sedangMenyimpan = false;
@@ -56,7 +65,9 @@ class _FormProdukPageState extends State<FormProdukPage> {
       final p = widget.produk!;
       _kodeController.text = p.kodeProduk;
       _namaController.text = p.nama;
-      _kategoriTerpilih = _kategoriList.contains(p.kategori) ? p.kategori : 'Makanan';
+      _kategoriTerpilih = _kategoriList.contains(p.kategori)
+          ? p.kategori
+          : 'Makanan';
       _hargaBeliController.text = p.hargaBeli.toInt().toString();
       _hargaJualController.text = p.hargaJual.toInt().toString();
       _stokController.text = p.stok.toString();
@@ -95,16 +106,16 @@ class _FormProdukPageState extends State<FormProdukPage> {
 
       // Konstruksi objek Produk
       final produkData = Produk(
-        id: _isEditMode ? widget.produk!.id : null, // Pertahankan ID asli jika edit
+        id: _isEditMode
+            ? widget.produk!.id
+            : null, // Pertahankan ID asli jika edit
         kodeProduk: _kodeController.text.trim(),
         nama: _namaController.text.trim(),
         kategori: _kategoriTerpilih,
         hargaBeli: beli,
         hargaJual: jual,
         stok: stok,
-        gambarUrl: _isEditMode
-            ? widget.produk!.gambarUrl
-            : 'https://images.unsplash.com/photo-1541167760496-1628856ab772?w=500',
+        gambarUrl: _isEditMode ? widget.produk!.gambarUrl : 'https://images.unsplash.com/photo-1541167760496-1628856ab772?w=500',
         diskonPersen: diskon,
       );
 
@@ -122,9 +133,11 @@ class _FormProdukPageState extends State<FormProdukPage> {
       // Beri notifikasi sukses SnackBar kepada kasir
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(_isEditMode
-              ? 'Data produk "${produkData.nama}" berhasil diperbarui!'
-              : 'Produk "${produkData.nama}" berhasil disimpan ke SQLite!'),
+          content: Text(
+            _isEditMode
+                ? 'Data produk "${produkData.nama}" berhasil diperbarui!'
+                : 'Produk "${produkData.nama}" berhasil disimpan ke SQLite!',
+          ),
           backgroundColor: const Color(0xFF1E3A8A),
           behavior: SnackBarBehavior.floating,
         ),
@@ -135,7 +148,10 @@ class _FormProdukPageState extends State<FormProdukPage> {
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Gagal menyimpan: $e'), backgroundColor: Colors.red),
+        SnackBar(
+          content: Text('Gagal menyimpan: $e'),
+          backgroundColor: Colors.red,
+        ),
       );
     } finally {
       if (mounted) setState(() => _sedangMenyimpan = false);
@@ -198,12 +214,15 @@ class _FormProdukPageState extends State<FormProdukPage> {
                 decoration: InputDecoration(
                   labelText: 'Kode SKU Produk',
                   prefixIcon: const Icon(Icons.qr_code),
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
                   filled: true,
                   fillColor: _isEditMode ? Colors.grey.shade100 : Colors.white,
                 ),
-                validator: (val) =>
-                    val == null || val.trim().isEmpty ? 'Kode wajib diisi' : null,
+                validator: (val) => val == null || val.trim().isEmpty
+                    ? 'Kode wajib diisi'
+                    : null,
               ),
               const SizedBox(height: 16),
 
@@ -213,22 +232,27 @@ class _FormProdukPageState extends State<FormProdukPage> {
                 decoration: InputDecoration(
                   labelText: 'Nama Produk Barang',
                   prefixIcon: const Icon(Icons.shopping_bag_outlined),
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
                   filled: true,
                   fillColor: Colors.white,
                 ),
-                validator: (val) =>
-                    val == null || val.trim().isEmpty ? 'Nama barang tidak boleh kosong' : null,
+                validator: (val) => val == null || val.trim().isEmpty
+                    ? 'Nama barang tidak boleh kosong'
+                    : null,
               ),
               const SizedBox(height: 16),
 
               // 3. DROPDOWN KATEGORI PRODUK
               DropdownButtonFormField<String>(
-                value: _kategoriTerpilih,
+                initialValue: _kategoriTerpilih,
                 decoration: InputDecoration(
                   labelText: 'Kelompok Kategori',
                   prefixIcon: const Icon(Icons.category_outlined),
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
                   filled: true,
                   fillColor: Colors.white,
                 ),
@@ -252,13 +276,16 @@ class _FormProdukPageState extends State<FormProdukPage> {
                       decoration: InputDecoration(
                         labelText: 'Harga Modal (Rp)',
                         prefixIcon: const Icon(Icons.monetization_on_outlined),
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
                         filled: true,
                         fillColor: Colors.white,
                       ),
                       validator: (val) {
                         if (val == null || val.isEmpty) return 'Wajib diisi';
-                        if (double.tryParse(val) == null || double.parse(val) <= 0) {
+                        if (double.tryParse(val) == null ||
+                            double.parse(val) <= 0) {
                           return 'Harus > 0';
                         }
                         return null;
@@ -274,14 +301,17 @@ class _FormProdukPageState extends State<FormProdukPage> {
                       decoration: InputDecoration(
                         labelText: 'Harga Jual (Rp)',
                         prefixIcon: const Icon(Icons.price_check),
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
                         filled: true,
                         fillColor: Colors.white,
                       ),
                       validator: (val) {
                         if (val == null || val.isEmpty) return 'Wajib diisi';
                         final jual = double.tryParse(val) ?? 0;
-                        final beli = double.tryParse(_hargaBeliController.text) ?? 0;
+                        final beli =
+                            double.tryParse(_hargaBeliController.text) ?? 0;
                         if (jual <= 0) return 'Harus > 0';
                         if (jual <= beli) return 'Harus > Modal';
                         return null;
@@ -303,11 +333,15 @@ class _FormProdukPageState extends State<FormProdukPage> {
                       decoration: InputDecoration(
                         labelText: 'Stok Fisik',
                         prefixIcon: const Icon(Icons.inventory_2_outlined),
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
                         filled: true,
                         fillColor: Colors.white,
                       ),
-                      validator: (val) => val == null || val.isEmpty ? 'Stok wajib diisi' : null,
+                      validator: (val) => val == null || val.isEmpty
+                          ? 'Stok wajib diisi'
+                          : null,
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -319,7 +353,9 @@ class _FormProdukPageState extends State<FormProdukPage> {
                       decoration: InputDecoration(
                         labelText: 'Diskon (%)',
                         prefixIcon: const Icon(Icons.discount_outlined),
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
                         filled: true,
                         fillColor: Colors.white,
                       ),
@@ -344,18 +380,32 @@ class _FormProdukPageState extends State<FormProdukPage> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF1E3A8A),
                     foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                   ),
                   icon: _sedangMenyimpan
                       ? const SizedBox(
                           width: 20,
                           height: 20,
-                          child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 2,
+                          ),
                         )
-                      : Icon(_isEditMode ? Icons.check_circle_outline : Icons.save_outlined),
+                      : Icon(
+                          _isEditMode
+                              ? Icons.check_circle_outline
+                              : Icons.save_outlined,
+                        ),
                   label: Text(
-                    _isEditMode ? 'PERBARUI DATA PRODUK' : 'SIMPAN PRODUK KE DATABASE',
-                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                    _isEditMode
+                        ? 'PERBARUI DATA PRODUK'
+                        : 'SIMPAN PRODUK KE DATABASE',
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15,
+                    ),
                   ),
                 ),
               ),

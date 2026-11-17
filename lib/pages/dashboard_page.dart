@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 // Mengimpor format mata uang
 import 'package:intl/intl.dart';
+
 // Mengimpor model data, database helper, dan formulir produk
 import '../models/produk.dart';
 import '../helpers/database_helper.dart';
@@ -19,7 +20,13 @@ class _DashboardPageState extends State<DashboardPage> {
   // Indeks kategori aktif terpilih
   int _kategoriTerpilih = 0;
   // Live Tweak 1: Menambahkan opsi kelompok kategori baru: 'Dessert'
-  final List<String> _kategoriList = ['Semua', 'Makanan', 'Minuman', 'Snack', 'Dessert'];
+  final List<String> _kategoriList = [
+    'Semua',
+    'Makanan',
+    'Minuman',
+    'Snack',
+    'Dessert',
+  ];
 
   // Variabel penampung hasil asinkron basis data SQLite
   late Future<List<Produk>> _produkFuture;
@@ -69,9 +76,9 @@ class _DashboardPageState extends State<DashboardPage> {
   }
 
   // --- LOGIKA DIALOG KONFIRMASI HAPUS PRODUK (MODAL ALERTDIALOG) ---
-  void _konfirmasiHapusProduk(BuildContext parentContext, Produk item) {
+  void _konfirmasiHapusProduk(BuildContext context, Produk item) {
     showDialog(
-      context: parentContext,
+      context: context,
       builder: (ctx) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: const Row(
@@ -92,11 +99,11 @@ class _DashboardPageState extends State<DashboardPage> {
           ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
             onPressed: () async {
+              final scaffoldMessenger = ScaffoldMessenger.of(context);
               Navigator.pop(ctx); // Tutup dialog modal
               // Eksekusi DELETE ke SQLite
               await DatabaseHelper.instance.deleteProduk(item.id!);
-              if (!mounted) return;
-              ScaffoldMessenger.of(parentContext).showSnackBar(
+              scaffoldMessenger.showSnackBar(
                 SnackBar(
                   content: Text(
                     'Produk "${item.nama}" berhasil dihapus dari database!',
@@ -165,7 +172,9 @@ class _DashboardPageState extends State<DashboardPage> {
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.08), // Elevasi bayangan lebih tegas
+            color: Colors.black.withValues(
+              alpha: 0.08,
+            ), // Elevasi bayangan lebih tegas
             blurRadius: 8,
             spreadRadius: 1,
             offset: const Offset(0, 3),
@@ -556,7 +565,8 @@ class _DashboardPageState extends State<DashboardPage> {
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 80),
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
-                    mainAxisExtent: 220, // Kunci tinggi kartu tetap (misal: 215 - 225 px)
+                    mainAxisExtent:
+                        220, // Kunci tinggi kartu tetap (misal: 215 - 225 px)
                     crossAxisSpacing: 12,
                     mainAxisSpacing: 12,
                   ),
